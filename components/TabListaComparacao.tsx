@@ -55,3 +55,4 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
     </div>
   );
 }
+// O código acima é um componente React que exibe uma lista de imóveis salvos, mostrando o custo total e a sobra estimada com base no salário e gastos fixos do usuário. Cada imóvel pode ser clicado para mostrar detalhes adicionais, como o tempo de deslocamento para o trabalho e para a casa do pai, tanto de carro quanto a pé. O componente também permite excluir imóveis da lista.

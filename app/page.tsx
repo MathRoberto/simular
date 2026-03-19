@@ -79,26 +79,31 @@ export default function SimularDashboard() {
   };
 
   if (carregando) return (
-    <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center text-purple-500 font-black uppercase tracking-widest animate-pulse">
+    <div className="min-h-screen bg-[#0d0d12] flex items-center justify-center text-purple-500 font-black uppercase tracking-widest animate-pulse">
       <div className="text-center">
         <div className="text-6xl mb-4">🌌</div>
-        Sincronizando Fortaleza...
+        Iniciando Cockpit...
       </div>
     </div>
   );
 
   return (
-    // NOVO FUNDO: ROXO, BRILHOSO E DARK
-    <div className="min-h-screen bg-[#08080a] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-[#08080a] to-[#050505] text-neutral-200 selection:bg-purple-500/30 overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#0d0d12] relative text-neutral-200 selection:bg-purple-500/30 overflow-x-hidden">
       
-      {/* HEADER COM BRILHO NOS VALORES */}
-      <header className="p-5 border-b border-purple-900/10 bg-[#0a0a0c]/50 backdrop-blur-xl sticky top-0 z-[50]">
+      {/* CAMADA DE NEBULOSAS (GLOWS AO FUNDO) */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-900/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[5%] right-[-5%] w-[40%] h-[60%] bg-fuchsia-900/5 blur-[100px] rounded-full"></div>
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-blue-900/10 blur-[100px] rounded-full"></div>
+      </div>
+
+      <header className="p-5 border-b border-white/5 bg-black/30 backdrop-blur-xl sticky top-0 z-[50]">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
           
           <div className="flex flex-col">
-            <span className="text-[7px] font-black uppercase tracking-[0.2em] text-zinc-600 mb-1 italic">Sobra Mensal</span>
-            <div className="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-2xl border border-purple-900/20 shadow-inner">
-              <span className={`font-mono font-bold text-sm drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] ${mostrarSobra ? 'text-emerald-400' : 'text-zinc-800 bg-zinc-800 select-none rounded blur-sm px-2'}`}>
+            <span className="text-[7px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1 italic">Sobra Mensal</span>
+            <div className="flex items-center gap-3 bg-white/[0.03] px-4 py-2 rounded-2xl border border-white/5 shadow-inner">
+              <span className={`font-mono font-bold text-sm drop-shadow-[0_0_8px_rgba(74,222,128,0.4)] ${mostrarSobra ? 'text-emerald-400' : 'text-zinc-800 bg-zinc-800 select-none rounded blur-sm px-2'}`}>
                 R$ {(salario - totalGastosFixos).toFixed(2)}
               </span>
               <button onClick={() => setMostrarSobra(!mostrarSobra)} className="text-lg opacity-60 hover:opacity-100 transition-opacity">{mostrarSobra ? '🔓' : '🔒'}</button>
@@ -110,10 +115,10 @@ export default function SimularDashboard() {
 
           <div className="flex flex-col items-end">
             <span className="text-[7px] font-black uppercase tracking-[0.2em] text-purple-400/50 mb-1 italic">Renda Mensal</span>
-            <div className="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-2xl border border-purple-500/10 shadow-inner">
+            <div className="flex items-center gap-3 bg-white/[0.03] px-4 py-2 rounded-2xl border border-white/5 shadow-inner">
                <button onClick={() => setModalAberto('salario')} className="text-lg hover:rotate-90 transition-all text-zinc-600 hover:text-purple-400">⚙️</button>
                <button onClick={() => setMostrarSalario(!mostrarSalario)} className="text-lg opacity-60 hover:opacity-100 transition-opacity">{mostrarSalario ? '🔓' : '🔒'}</button>
-              <span className={`font-mono font-black text-sm drop-shadow-[0_0_10px_rgba(168,85,247,0.6)] ${mostrarSalario ? 'text-purple-400' : 'text-zinc-800 bg-zinc-800 select-none rounded blur-sm px-2'}`}>
+              <span className={`font-mono font-black text-sm drop-shadow-[0_0_10px_rgba(168,85,247,0.5)] ${mostrarSalario ? 'text-purple-400' : 'text-zinc-800 bg-zinc-800 select-none rounded blur-sm px-2'}`}>
                 R$ {salario.toFixed(2)}
               </span>
             </div>
@@ -122,7 +127,7 @@ export default function SimularDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto p-4 md:p-12 pb-40 relative z-10">
-        <div className="animate-in fade-in duration-700">
+        <div className="animate-in fade-in duration-1000">
           {abaAtiva === 'lista' && (
             <TabListaComparacao 
               imoveisSalvos={imoveisSalvos} 
@@ -139,21 +144,21 @@ export default function SimularDashboard() {
         </div>
       </main>
 
-      {/* DOCK NAVEGAÇÃO SUPER GLOW */}
+      {/* DOCK NAVEGAÇÃO GLOW */}
       <div className="fixed bottom-8 left-0 right-0 flex justify-center z-[100] px-6 pointer-events-none">
-        <nav className="flex items-center justify-around w-full max-w-md bg-[#0a0a0c]/80 backdrop-blur-2xl border border-purple-900/30 rounded-full p-2 shadow-[0_0_50px_rgba(168,85,247,0.2)] pointer-events-auto">
-          <button onClick={() => setAbaAtiva('lista')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-colors ${abaAtiva === 'lista' ? 'text-purple-300 bg-purple-500/10 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}>
-            <span className="text-xl mb-1">📋</span>
-            <span className="text-[8px] font-black uppercase tracking-widest">Favoritos</span>
+        <nav className="flex items-center justify-around w-full max-w-md bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full p-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] pointer-events-auto">
+          <button onClick={() => setAbaAtiva('lista')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'lista' ? 'text-purple-300 bg-white/5' : 'text-zinc-600 hover:text-zinc-300'}`}>
+            <span className="text-xl mb-1 italic">📋</span>
+            <span className="text-[8px] font-black uppercase tracking-widest italic">Favoritos</span>
           </button>
           <div className="px-3">
-            <button onClick={() => { setImovelSendoEditado(null); setAbaAtiva('cadastro'); }} className={`p-6 rounded-full -mt-12 border-4 border-[#08080a] shadow-2xl transition-all duration-300 ${abaAtiva === 'cadastro' ? 'bg-purple-600 text-white shadow-[0_0_30px_rgba(168,85,247,0.6)] scale-110' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}>
+            <button onClick={() => { setImovelSendoEditado(null); setAbaAtiva('cadastro'); }} className={`p-6 rounded-full -mt-12 border-4 border-[#0d0d12] shadow-2xl transition-all duration-500 ${abaAtiva === 'cadastro' ? 'bg-purple-600 text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] scale-110' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}>
               <span className="text-2xl block font-bold">＋</span>
             </button>
           </div>
-          <button onClick={() => setAbaAtiva('mapa')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-colors ${abaAtiva === 'mapa' ? 'text-purple-300 bg-purple-500/10 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}>
-            <span className="text-xl mb-1">🗺️</span>
-            <span className="text-[8px] font-black uppercase tracking-widest">Onde</span>
+          <button onClick={() => setAbaAtiva('mapa')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'mapa' ? 'text-purple-300 bg-white/5' : 'text-zinc-600 hover:text-zinc-300'}`}>
+            <span className="text-xl mb-1 italic">🗺️</span>
+            <span className="text-[8px] font-black uppercase tracking-widest italic">Onde</span>
           </button>
         </nav>
       </div>
@@ -163,5 +168,4 @@ export default function SimularDashboard() {
       )}
     </div>
   );
-} 
-// FUTURO: Animação de fundo com estrelas cadentes, nebulosas e um foguete passando de vez em quando.
+}

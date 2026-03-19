@@ -9,8 +9,9 @@ export type ImovelSalvo = {
   agua: number;
   gas: number;
   internet: number;
-  tempoTrabalhoCarro: number; // Novo: Carro pro trabalho
-  tempoTrabalhoApe: number;   // Novo: A pé pro trabalho
-  tempoCasaCarro: number;     // Novo: Carro pra casa
-  tempoCasaApe: number;       // Novo: A pé pra casa
-};
+  tempoTrabalhoCarro: number;
+  tempoTrabalhoApe: number;  
+  tempoCasaCarro: number;    
+  tempoCasaApe: number;      
+  link_anuncio?: string; 
+}

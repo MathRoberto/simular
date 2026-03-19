@@ -32,7 +32,7 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
         <h2 className="text-xl font-black text-white uppercase tracking-[0.2em] italic drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">Meus Favoritos</h2>
         {selecionadosParaComparar.length > 0 && (
           <button onClick={() => setSelecionadosParaComparar([])} className="text-[9px] bg-purple-500/20 text-purple-400 px-4 py-1.5 rounded-full font-black border border-purple-500/30 uppercase animate-pulse">
-            Duelo ({selecionadosParaComparar.length}/2)
+            Limpar Duelo ({selecionadosParaComparar.length}/2)
           </button>
         )}
       </div>
@@ -49,15 +49,21 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
               className={`group bg-[#111114]/80 backdrop-blur-md border transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] hover:border-purple-500/30 ${estaSelecionado ? 'border-purple-500 shadow-[0_0_40px_rgba(147,51,234,0.3)]' : 'border-white/5'}`}
             >
               <div className="flex justify-between items-start mb-6">
-                <div className="max-w-[70%]">
+                <div className="max-w-[60%]">
                   <h3 className="text-2xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 truncate drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">{imovel.nome}</h3>
                   <p className="text-[10px] text-zinc-500 mt-2 font-medium truncate italic">📍 {imovel.endereco}</p>
+                  {imovel.link_anuncio && (
+                    <a href={imovel.link_anuncio} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-block mt-3 text-[8px] font-black text-purple-500 uppercase tracking-widest hover:text-white transition-colors">
+                      🔗 Ver Anúncio
+                    </a>
+                  )}
                 </div>
                 <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                   <button onClick={(e) => toggleComparacao(e, imovel)} className={`p-3 rounded-2xl transition-all ${estaSelecionado ? 'bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-zinc-800/50 text-zinc-400 hover:text-purple-400'}`}>
                     {estaSelecionado ? '✅' : '⚖️'}
                   </button>
                   <button onClick={() => onIniciarEdicao(imovel)} className="p-3 bg-zinc-800/50 hover:bg-zinc-700 rounded-2xl text-xs text-zinc-400 hover:text-white">⚙️</button>
+                  <button onClick={() => onExcluir(imovel.id)} className="p-3 bg-rose-950/20 hover:bg-rose-600 text-rose-500 hover:text-white rounded-2xl text-xs transition-all border border-rose-500/10">✕</button>
                 </div>
               </div>
 
@@ -101,13 +107,12 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
               ))}
             </div>
 
-            {/* AQUI ESTÁ O LINK CORRIGIDO NO MODAL */}
             {imovelDetalhado.link_anuncio && (
               <a 
                 href={imovelDetalhado.link_anuncio} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="w-full mt-8 bg-purple-600/10 border border-purple-500/20 p-4 rounded-2xl text-[10px] font-black text-purple-400 uppercase text-center block tracking-widest hover:bg-purple-600 hover:text-white transition-all shadow-[0_0_15px_rgba(168,85,247,0.1)] hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+                className="w-full mt-8 bg-purple-600/10 border border-purple-500/20 p-4 rounded-2xl text-[10px] font-black text-purple-400 uppercase text-center block tracking-widest hover:bg-purple-600 hover:text-white transition-all shadow-[0_0_15px_rgba(168,85,247,0.1)]"
               >
                 🔗 Abrir Anúncio Original
               </a>
@@ -137,7 +142,11 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                        <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Sobra Final Estimada</span>
                        <span className={`text-4xl font-black drop-shadow-[0_0_15px_rgba(168,85,247,0.4)] ${sobra > outroSobra ? 'text-emerald-400 scale-110' : 'text-zinc-400'} transition-all inline-block`}>{formatarMoeda(sobra)}</span>
                     </div>
-                    {imovel.link_anuncio && <a href={imovel.link_anuncio} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-purple-500 underline uppercase tracking-widest hover:text-white transition-colors">Abrir Site</a>}
+                    {imovel.link_anuncio && (
+                      <a href={imovel.link_anuncio} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-purple-500 underline uppercase tracking-widest hover:text-white transition-colors">
+                        Abrir Site do Anúncio
+                      </a>
+                    )}
                   </div>
                 );
               })}

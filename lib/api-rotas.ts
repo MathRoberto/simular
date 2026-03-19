@@ -1,14 +1,13 @@
 // Função para pegar latitude/longitude de um endereço em JF
 async function getCoords(endereco: string) {
-  // Adicionamos o "Juiz de Fora, MG" para o Nominatim não se perder
   const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(endereco + ", Juiz de Fora, MG")}`;
   
   try {
     const res = await fetch(url, {
-      headers: { 'User-Agent': 'SimuLar-App-Matheus' } // Boa prática para evitar bloqueio
+      headers: { 'User-Agent': 'SimuLar-App-Matheus' }
     });
     const data = await res.json();
-    return data.length > 0 ? { lat: data[0].lat, lon: data[0].lon } : null;
+    return data.length > 0 ? { lat: Number(data[0].lat), lon: Number(data[0].lon) } : null;
   } catch (error) {
     console.error("Erro no Geocoding:", error);
     return null;
@@ -16,13 +15,14 @@ async function getCoords(endereco: string) {
 }
 
 export async function calcularTemposJF(enderecoDestino: string) {
-  // COORDENADAS PRECISAS (JF - MG)
+  // PONTOS DE INTERESSE PRECISOS
   const coordsPai = { lat: -21.7612, lon: -43.3492 }; 
-  const coordsTrampo = { lat: -21.7589, lon: -43.3514 }; 
+  const coordsTrampo = { lat: -21.7589, lon: -43.3514 }; // Rua Oscar Vidal, 274
 
   const origem = await getCoords(enderecoDestino);
   if (!origem) return null;
 
+  // Função para pegar tempo (carro ou a pé) via OSRM
   const getRoute = async (toLat: number, toLon: number, mode: 'driving' | 'walking') => {
     try {
       const url = `https://router.project-osrm.org/route/v1/${mode}/${origem.lon},${origem.lat};${toLon},${toLat}?overview=false`;
@@ -39,9 +39,11 @@ export async function calcularTemposJF(enderecoDestino: string) {
     }
   };
 
+  // Agora calculamos os 4 cenários:
   return {
-    tempoPai: await getRoute(coordsPai.lat, coordsPai.lon, 'driving'),
-    tempoTrab: await getRoute(coordsTrampo.lat, coordsTrampo.lon, 'driving'),
-    tempoApe: await getRoute(coordsTrampo.lat, coordsTrampo.lon, 'walking')
+    tempoPaiCarro: await getRoute(coordsPai.lat, coordsPai.lon, 'driving'),
+    tempoPaiApe: await getRoute(coordsPai.lat, coordsPai.lon, 'walking'), // NOVO: A pé pro seu pai
+    tempoTrabCarro: await getRoute(coordsTrampo.lat, coordsTrampo.lon, 'driving'),
+    tempoTrabApe: await getRoute(coordsTrampo.lat, coordsTrampo.lon, 'walking') // A pé pro trampo
   };
 }

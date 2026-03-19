@@ -1,0 +1,50 @@
+[
+  {
+    "id": "sao-mateus-inicial",
+    "nome": "Apartamento São Mateus",
+    "endereco": "Rua Guaçuí, 501, São Mateus, Juiz de Fora - MG",
+    "aluguel": 860,
+    "condominio": 300,
+    "iptu": 85,
+    "luz": 120,
+    "agua": 0,
+    "gas": 90,
+    "internet": 170,
+    "tempoTrabalhoCarro": 7,
+    "tempoTrabalhoApe": 15,
+    "tempoCasaCarro": 15,
+    "tempoCasaApe": 50
+  },
+  {
+    "id": "sao-pedro-inicial",
+    "nome": "Apartamento São Pedro",
+    "endereco": "Rua Euclides Pezarini, 215, São Pedro, Juiz de Fora - MG",
+    "aluguel": 650,
+    "condominio": 200,
+    "iptu": 50,
+    "luz": 120,
+    "agua": 0,
+    "gas": 90,
+    "internet": 170,
+    "tempoTrabalhoCarro": 20,
+    "tempoTrabalhoApe": 55,
+    "tempoCasaCarro": 28,
+    "tempoCasaApe": 80
+  },
+  {
+    "id": "ap-democrata",
+    "nome": "Ap Democrata",
+    "endereco": "Rua Nestor Doyle Silva, 93, Democrata, Juiz de Fora - MG",
+    "aluguel": 1100,
+    "condominio": 150,
+    "iptu": 102,
+    "luz": 120,
+    "agua": 0,
+    "gas": 90,
+    "internet": 170,
+    "tempoTrabalhoCarro": 12,
+    "tempoTrabalhoApe": 45,
+    "tempoCasaCarro": 6,
+    "tempoCasaApe": 25
+  }
+]

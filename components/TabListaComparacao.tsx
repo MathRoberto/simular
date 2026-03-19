@@ -29,10 +29,10 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
   return (
     <div className="space-y-6 pb-28">
       <div className="px-4 flex justify-between items-center">
-        <h2 className="text-xl font-black text-white uppercase tracking-[0.2em]">Meus Favoritos</h2>
+        <h2 className="text-xl font-black text-white uppercase tracking-[0.2em] italic">Meus Favoritos</h2>
         {selecionadosParaComparar.length > 0 && (
           <button onClick={() => setSelecionadosParaComparar([])} className="text-[9px] bg-purple-500/20 text-purple-400 px-4 py-1.5 rounded-full font-black border border-purple-500/30 uppercase animate-pulse">
-            Modo Duelo ({selecionadosParaComparar.length}/2)
+            Duelo ({selecionadosParaComparar.length}/2)
           </button>
         )}
       </div>
@@ -46,7 +46,7 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
             <div 
               key={imovel.id} 
               onClick={() => setImovelDetalhado(imovel)}
-              className={`group bg-[#0f0f12] border transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] ${estaSelecionado ? 'border-purple-500 shadow-[0_0_40px_rgba(147,51,234,0.15)]' : 'border-white/5 hover:border-white/20'}`}
+              className={`group bg-[#16161a]/40 backdrop-blur-md border transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] ${estaSelecionado ? 'border-purple-500 shadow-[0_0_40px_rgba(147,51,234,0.15)]' : 'border-white/5 hover:border-white/20'}`}
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="max-w-[70%]">
@@ -105,20 +105,17 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                 </div>
               ))}
             </div>
-            {imovelDetalhado.link_anuncio && (
-              <a href={imovelDetalhado.link_anuncio} target="_blank" rel="noopener noreferrer" className="w-full mt-6 bg-purple-600/10 border border-purple-500/20 p-4 rounded-2xl text-[10px] font-black text-purple-400 uppercase text-center block tracking-widest hover:bg-purple-600 hover:text-white transition-all">Ir para o anúncio</a>
-            )}
-            <button onClick={() => setImovelDetalhado(null)} className="w-full mt-2 bg-zinc-900 p-4 rounded-2xl text-[10px] font-black uppercase text-zinc-500 tracking-widest border border-white/5">Fechar</button>
+            <button onClick={() => setImovelDetalhado(null)} className="w-full mt-8 bg-zinc-900 p-4 rounded-2xl text-[10px] font-black uppercase text-zinc-500 tracking-widest border border-white/5">Fechar</button>
           </div>
         </div>
       )}
 
-      {/* MODAL DUELO (simplificado para o exemplo) */}
+      {/* MODAL DUELO */}
       {selecionadosParaComparar.length === 2 && (
         <div className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-3xl flex items-center justify-center p-4 md:p-10" onClick={() => setSelecionadosParaComparar([])}>
           <div className="max-w-5xl w-full bg-[#0a0a0c] border border-white/10 rounded-[4rem] overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="p-8 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-purple-900/10 to-fuchsia-900/10">
-              <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Comparativo de Imóveis</h2>
+              <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Comparativo</h2>
               <button onClick={() => setSelecionadosParaComparar([])} className="bg-zinc-900 p-4 rounded-full text-zinc-500 hover:text-white">✕</button>
             </div>
             <div className="grid grid-cols-2 divide-x divide-white/5">
@@ -129,10 +126,9 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                   <div key={imovel.id} className="p-12 text-center space-y-6">
                     <h3 className={`text-3xl font-black uppercase italic ${idx === 0 ? 'text-purple-400' : 'text-fuchsia-400'}`}>{imovel.nome}</h3>
                     <div className="p-8 bg-white/5 rounded-[2rem] border border-white/5">
-                       <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Sobra Livre Final</span>
+                       <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Sobra Final</span>
                        <span className={`text-4xl font-black ${sobra > outroSobra ? 'text-emerald-400 scale-110' : 'text-zinc-400'} transition-all inline-block`}>{formatarMoeda(sobra)}</span>
                     </div>
-                    {imovel.link_anuncio && <a href={imovel.link_anuncio} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-zinc-500 underline uppercase tracking-widest">Abrir Site</a>}
                   </div>
                 );
               })}

@@ -11,7 +11,7 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
   const [imovelDetalhado, setImovelDetalhado] = useState<any>(null);
 
   const toggleComparacao = (e: React.MouseEvent, imovel: any) => {
-    e.stopPropagation(); // Impede de abrir o Raio-X ao clicar na balança
+    e.stopPropagation();
     if (selecionadosParaComparar.find(i => i.id === imovel.id)) {
       setSelecionadosParaComparar(selecionadosParaComparar.filter(i => i.id !== imovel.id));
     } else if (selecionadosParaComparar.length < 2) {
@@ -28,20 +28,15 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
 
   return (
     <div className="space-y-6 pb-28">
-      {/* HEADER */}
       <div className="px-4 flex justify-between items-center">
         <h2 className="text-xl font-black text-white uppercase tracking-[0.2em]">Meus Favoritos</h2>
         {selecionadosParaComparar.length > 0 && (
-          <button 
-            onClick={() => setSelecionadosParaComparar([])}
-            className="text-[9px] bg-purple-500/20 text-purple-400 px-4 py-1.5 rounded-full font-black border border-purple-500/30 uppercase animate-pulse"
-          >
+          <button onClick={() => setSelecionadosParaComparar([])} className="text-[9px] bg-purple-500/20 text-purple-400 px-4 py-1.5 rounded-full font-black border border-purple-500/30 uppercase animate-pulse">
             Modo Duelo ({selecionadosParaComparar.length}/2)
           </button>
         )}
       </div>
 
-      {/* GRID DE CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
         {imoveisSalvos.map((imovel: any) => {
           const { custo, sobra } = calcularDados(imovel);
@@ -55,8 +50,13 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="max-w-[70%]">
-                  <h3 className="text-2xl font-black text-white leading-none tracking-tight group-hover:text-purple-400">{imovel.nome}</h3>
-                  <p className="text-[10px] text-zinc-500 mt-2 font-medium truncate">📍 {imovel.endereco}</p>
+                  <h3 className="text-2xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 truncate">{imovel.nome}</h3>
+                  <p className="text-[10px] text-zinc-500 mt-2 font-medium truncate italic">📍 {imovel.endereco}</p>
+                  {imovel.link_anuncio && (
+                    <a href={imovel.link_anuncio} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-block mt-3 text-[8px] font-black text-purple-500 uppercase tracking-widest hover:text-white transition-colors">
+                      🔗 Ver Anúncio
+                    </a>
+                  )}
                 </div>
                 <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                   <button onClick={(e) => toggleComparacao(e, imovel)} className={`p-3 rounded-2xl transition-all ${estaSelecionado ? 'bg-purple-600 text-white' : 'bg-zinc-800/50 text-zinc-400 hover:text-purple-400'}`}>
@@ -76,18 +76,18 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                   <span className={`text-2xl font-black ${sobra >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>{formatarMoeda(sobra)}</span>
                 </div>
               </div>
-              <p className="text-center text-[7px] text-zinc-700 font-black uppercase tracking-widest">Clique para ver Raio-X 🔍</p>
+              <p className="text-center text-[7px] text-zinc-700 font-black uppercase tracking-widest">Raio-X 🔍</p>
             </div>
           );
         })}
       </div>
 
-      {/* MODAL 1: RAIO-X (INFO DO CARD) */}
+      {/* MODAL RAIO-X */}
       {imovelDetalhado && (
         <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4" onClick={() => setImovelDetalhado(null)}>
-          <div className="bg-[#0a0a0c] border border-white/10 p-8 rounded-[3rem] max-w-sm w-full shadow-2xl animate-in zoom-in-95 duration-300" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[#0a0a0c] border border-white/10 p-8 rounded-[3rem] max-w-sm w-full shadow-2xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
-              <h2 className="text-xl font-black text-white uppercase italic tracking-tighter">Raio-X: {imovelDetalhado.nome}</h2>
+              <h2 className="text-xl font-black text-white uppercase italic tracking-tighter">Detalhes: {imovelDetalhado.nome}</h2>
               <button onClick={() => setImovelDetalhado(null)} className="text-zinc-500 hover:text-white">✕</button>
             </div>
             <div className="space-y-4">
@@ -105,36 +105,34 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                 </div>
               ))}
             </div>
-            <button onClick={() => setImovelDetalhado(null)} className="w-full mt-8 bg-zinc-900 p-4 rounded-2xl text-[10px] font-black uppercase border border-white/5 hover:bg-white/5 transition-all">Voltar</button>
+            {imovelDetalhado.link_anuncio && (
+              <a href={imovelDetalhado.link_anuncio} target="_blank" rel="noopener noreferrer" className="w-full mt-6 bg-purple-600/10 border border-purple-500/20 p-4 rounded-2xl text-[10px] font-black text-purple-400 uppercase text-center block tracking-widest hover:bg-purple-600 hover:text-white transition-all">Ir para o anúncio</a>
+            )}
+            <button onClick={() => setImovelDetalhado(null)} className="w-full mt-2 bg-zinc-900 p-4 rounded-2xl text-[10px] font-black uppercase text-zinc-500 tracking-widest border border-white/5">Fechar</button>
           </div>
         </div>
       )}
 
-      {/* MODAL 2: DUELO (COMPARAÇÃO) */}
+      {/* MODAL DUELO (simplificado para o exemplo) */}
       {selecionadosParaComparar.length === 2 && (
-        <div className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-3xl flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-500">
-          <div className="max-w-5xl w-full bg-[#0a0a0c] border border-white/10 rounded-[4rem] overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-3xl flex items-center justify-center p-4 md:p-10" onClick={() => setSelecionadosParaComparar([])}>
+          <div className="max-w-5xl w-full bg-[#0a0a0c] border border-white/10 rounded-[4rem] overflow-hidden shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="p-8 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-purple-900/10 to-fuchsia-900/10">
-              <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Duelo de Imóveis</h2>
+              <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Comparativo de Imóveis</h2>
               <button onClick={() => setSelecionadosParaComparar([])} className="bg-zinc-900 p-4 rounded-full text-zinc-500 hover:text-white">✕</button>
             </div>
             <div className="grid grid-cols-2 divide-x divide-white/5">
               {selecionadosParaComparar.map((imovel, idx) => {
-                const { custo, sobra } = calcularDados(imovel);
-                const outro = selecionadosParaComparar[idx === 0 ? 1 : 0];
-                const { sobra: sobraOutro } = calcularDados(outro);
+                const { sobra } = calcularDados(imovel);
+                const outroSobra = calcularDados(selecionadosParaComparar[idx === 0 ? 1 : 0]).sobra;
                 return (
-                  <div key={imovel.id} className="p-8 md:p-12 space-y-8">
-                    <div className="text-center">
-                      <h3 className={`text-3xl font-black uppercase italic ${idx === 0 ? 'text-purple-400' : 'text-fuchsia-400'}`}>{imovel.nome}</h3>
+                  <div key={imovel.id} className="p-12 text-center space-y-6">
+                    <h3 className={`text-3xl font-black uppercase italic ${idx === 0 ? 'text-purple-400' : 'text-fuchsia-400'}`}>{imovel.nome}</h3>
+                    <div className="p-8 bg-white/5 rounded-[2rem] border border-white/5">
+                       <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2 block">Sobra Livre Final</span>
+                       <span className={`text-4xl font-black ${sobra > outroSobra ? 'text-emerald-400 scale-110' : 'text-zinc-400'} transition-all inline-block`}>{formatarMoeda(sobra)}</span>
                     </div>
-                    <div className="flex flex-col items-center p-6 bg-white/5 rounded-[2rem] border border-white/5">
-                      <span className="text-[9px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Sobra Mensal</span>
-                      <span className={`text-4xl font-black tracking-tighter ${sobra > sobraOutro ? 'text-emerald-400 scale-110' : 'text-zinc-400'} transition-all`}>
-                        {formatarMoeda(sobra)}
-                      </span>
-                      {sobra > sobraOutro && <span className="text-[8px] font-black text-emerald-500 mt-2 animate-bounce">🏆 VENCEDOR FINANCEIRO</span>}
-                    </div>
+                    {imovel.link_anuncio && <a href={imovel.link_anuncio} target="_blank" rel="noopener noreferrer" className="text-[10px] font-black text-zinc-500 underline uppercase tracking-widest">Abrir Site</a>}
                   </div>
                 );
               })}

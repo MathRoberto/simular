@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 SimuLar: Dashboard Imobiliário Premium
 
-## Getting Started
+**SimuLar** é uma plataforma de análise financeira e logística pessoal desenvolvida para otimizar a escolha de imóveis em Juiz de Fora - MG. O sistema combina indicadores de custo fixo, projeção de sobra salarial e cálculos de tempo de deslocamento em tempo real.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Funcionalidades Chave
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **Análise de Fluxo de Caixa:** Cálculo automático de sobra mensal baseado em Renda Líquida vs. Custos Fixos (Aluguel, Condomínio, IPTU, Utilidades).
+* **Logística Inteligente:** Integração com OSRM (Open Source Routing Machine) para cálculo de tempo de deslocamento (Carro/A pé) para pontos estratégicos:
+    * Trabalho (Rua Oscar Vidal)
+    * Familiar (Casa do Pai)
+* **Modo Duelo (X1):** Interface comparativa técnica entre dois imóveis para decisão baseada em dados reais.
+* **Privacidade Multinível:** Sistema de "Cadeados" para ocultar dados sensíveis em ambientes públicos e autenticação robusta via Supabase Auth.
+* **Interface Custom:** UI inspirada na estética *Gothic/High-Tech*, otimizada para setups de múltiplos monitores e alta performance.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Tech Stack
 
-## Learn More
+* **Framework:** [Next.js 14](https://nextjs.org/) (App Router)
+* **Linguagem:** TypeScript
+* **Estilização:** Tailwind CSS + Framer Motion (Animações)
+* **Backend & Auth:** [Supabase](https://supabase.com/) (PostgreSQL + GoTrue)
+* **Maps/Routing:** OSRM API + Nominatim (Geocoding)
+* **Deployment:** Vercel
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚙️ Configuração do Ambiente
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Para rodar o projeto localmente, siga os passos:
 
-## Deploy on Vercel
+1.  **Clonar o repositório:**
+    ```bash
+    git clone [https://github.com/seu-usuario/simular-dashboard.git](https://github.com/seu-usuario/simular-dashboard.git)
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2.  **Instalar dependências:**
+    ```bash
+    npm install
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3.  **Variáveis de Ambiente:**
+    Crie um arquivo `.env.local` na raiz e adicione suas credenciais:
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=seu_link_do_supabase
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon
+    ```
+
+4.  **Rodar em desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+
+---
+
+## 🛡️ Segurança e Privacidade
+
+O projeto utiliza **RLS (Row Level Security)** no banco de dados, garantindo que cada usuário autenticado tenha acesso exclusivo aos seus próprios registros. As sessões são gerenciadas via `sessionStorage` para garantir que o acesso expire automaticamente ao fechar o navegador, elevando o padrão de segurança pessoal.
+
+---
+
+## 📍 Localidade de Referência
+
+O sistema está configurado por padrão para a malha urbana de **Juiz de Fora, Minas Gerais**, utilizando coordenadas geográficas locais para precisão absoluta nos cálculos de trânsito e rotas.
+
+---
+
+<p align="center">
+  Desenvolvido por <strong>Matheus Roberto</strong> • 2026
+</p>

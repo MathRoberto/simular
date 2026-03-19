@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 export default function TabCadastro({ onSalvar, imovelParaEditar, onLimparEdicao }: any) {
   const [nome, setNome] = useState('');
   const [endereco, setEndereco] = useState('');
-  const [linkAnuncio, setLinkAnuncio] = useState(''); // Novo campo
+  const [linkAnuncio, setLinkAnuncio] = useState('');
   const [aluguel, setAluguel] = useState('');
   const [condominio, setCondominio] = useState('');
   const [iptu, setIptu] = useState('');

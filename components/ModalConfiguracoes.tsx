@@ -73,7 +73,7 @@ export default function ModalConfiguracoes({ onClose, mostrarSalario, focoInicia
           </div>
         )}
 
-        {/* TELA DE GASTOS FIXOS (VAGA, CARTÃO, ETC) */}
+        {/* TELA DE GASTOS FIXOS */}
         {focoInicial === 'gastos' && (
           <div className="space-y-6">
             <div className="max-h-[300px] overflow-y-auto space-y-3 pr-2 custom-scrollbar">

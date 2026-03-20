@@ -17,7 +17,7 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
   };
 
   return (
-    <div className="space-y-6 pb-28">
+    <div className="space-y-6 pb-28 animate-in fade-in duration-700">
       <div className="px-4 flex justify-between items-center">
         <h2 className="text-xl font-black text-white uppercase tracking-[0.2em] italic drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">Meus Favoritos</h2>
       </div>
@@ -27,46 +27,40 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
           const { custo, sobra } = calcularSobra(imovel);
           
           return (
-            <div key={imovel.id} onClick={() => setDetalhe(imovel)} className="group bg-[#111114]/80 backdrop-blur-md border border-white/5 transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] hover:border-purple-500/30">
-              <div className="flex justify-between items-start mb-6">
+            <div key={imovel.id} onClick={() => setDetalhe(imovel)} className="group bg-[#111114]/80 backdrop-blur-md border border-white/5 transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] hover:border-purple-500/30 overflow-hidden relative">
+              
+              {/* Header do Card com Nome e Botões */}
+              <div className="flex justify-between items-start mb-6 relative z-10">
                 <div className="max-w-[70%]">
-                  <h3 className="text-2xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 truncate pr-8">{imovel.nome}</h3>
+                  <h3 className="text-2xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 truncate pr-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">{imovel.nome}</h3>
                   <p className="text-[10px] text-zinc-500 truncate italic">📍 {imovel.endereco}</p>
                 </div>
-                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-                  <button onClick={() => onIniciarEdicao(imovel)} className="p-3 bg-zinc-800/50 hover:bg-zinc-700 rounded-2xl text-xs text-zinc-400 hover:text-white transition-all">⚙️</button>
-                  <button onClick={() => onExcluir(imovel.id)} className="p-3 bg-rose-950/20 hover:bg-rose-600 text-rose-500 hover:text-white rounded-2xl text-xs transition-all border border-rose-500/10 text-center">✕</button>
+                <div className="flex gap-2 relative z-20" onClick={(e) => e.stopPropagation()}>
+                  <button onClick={() => onIniciarEdicao(imovel)} title="Editar" className="p-3 bg-zinc-800/50 hover:bg-zinc-700 rounded-2xl text-xs text-zinc-400 hover:text-white transition-all">⚙️</button>
+                  <button onClick={() => onExcluir(imovel.id)} title="Deletar" className="p-3 bg-rose-950/20 hover:bg-rose-600 text-rose-500 hover:text-white rounded-2xl text-xs transition-all border border-rose-500/10 text-center">✕</button>
                 </div>
               </div>
 
-              <div className="bg-black/60 rounded-[1.8rem] p-5 border border-purple-900/20 mb-4">
+              {/* FINANCEIRO - Único Foco do Card agora */}
+              <div className="bg-black/60 rounded-[1.8rem] p-5 border border-purple-900/20 mb-2 relative z-10">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-[9px] uppercase font-black text-zinc-600 tracking-widest">Custo Total</span>
-                  <span className="text-lg font-bold text-rose-400">{formatarMoeda(custo)}</span>
+                  <span className="text-lg font-bold text-rose-400 drop-shadow-[0_0_5px_rgba(251,113,133,0.3)]">{formatarMoeda(custo)}</span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-[9px] uppercase font-black text-zinc-600 tracking-widest mb-1">Sobra Final</span>
-                  <span className={`text-2xl font-black ${sobra >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>{formatarMoeda(sobra)}</span>
+                  <span className={`text-2xl font-black tracking-tighter drop-shadow-[0_0_10px_rgba(168,85,247,0.3)] ${sobra >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>{formatarMoeda(sobra)}</span>
                 </div>
               </div>
 
-              {/* LOGÍSTICA JF NO CARD - AGORA COM PAI E TRAMPO */}
-              <div className="mt-4 grid grid-cols-2 gap-2 text-[8px] font-black uppercase text-zinc-500 italic border-t border-white/5 pt-4">
-                <div className="flex flex-col gap-1">
-                  <span>🚗 {imovel.tempo_trabalho_carro || 0}m Trampo</span>
-                  <span>🏃 {imovel.tempo_trabalho_ape || 0}m Trampo</span>
-                </div>
-                <div className="flex flex-col gap-1 items-end text-right">
-                  <span>🚗 {imovel.tempo_casa_carro || 0}m Pai</span>
-                  <span>🏃 {imovel.tempo_casa_ape || 0}m Pai</span>
-                </div>
-              </div>
+              {/* Subtitle para Raio-X */}
+              <p className="text-center text-[7px] text-zinc-800 font-black uppercase tracking-widest mt-3 group-hover:text-zinc-600 transition-colors relative z-10">Raio-X 🔍</p>
             </div>
           );
         })}
       </div>
 
-      {/* MODAL RAIO-X COMPLETO */}
+      {/* MODAL RAIO-X (Mantive completo para consulta se o usuário clicar) */}
       {detalhe && (
         <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setDetalhe(null)}>
           <div className="bg-[#0a0a0c] border border-purple-500/20 p-8 rounded-[3rem] max-w-sm w-full shadow-2xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
@@ -75,7 +69,7 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
               <button onClick={() => setDetalhe(null)} className="text-zinc-500 hover:text-white text-xl">✕</button>
             </div>
             
-            <div className="space-y-3 text-[10px] font-bold uppercase tracking-widest">
+            <div className="space-y-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400">
               <div className="flex justify-between"><span>Aluguel</span><span className="text-white font-mono">{formatarMoeda(detalhe.aluguel)}</span></div>
               <div className="flex justify-between"><span>Condomínio</span><span className="text-white font-mono">{formatarMoeda(detalhe.condominio)}</span></div>
               <div className="flex justify-between"><span>IPTU</span><span className="text-rose-400 font-mono">{formatarMoeda(detalhe.iptu)}</span></div>
@@ -101,17 +95,9 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                 </div>
               </div>
 
-              {/* LINK DO ANÚNCIO NO RAIO-X */}
               {detalhe.link_anuncio && (
                 <div className="mt-6">
-                  <a 
-                    href={detalhe.link_anuncio} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="w-full block bg-purple-600/10 hover:bg-purple-600 text-purple-400 hover:text-white text-center py-3 rounded-2xl transition-all border border-purple-500/20 font-black italic text-[9px] tracking-widest uppercase shadow-[0_0_15px_rgba(168,85,247,0.1)]"
-                  >
-                    🔗 Abrir Anúncio Original
-                  </a>
+                  <a href={detalhe.link_anuncio} target="_blank" rel="noopener noreferrer" className="w-full block bg-purple-600/10 hover:bg-purple-600 text-purple-400 hover:text-white text-center py-3 rounded-2xl transition-all border border-purple-500/20 font-black italic text-[9px] tracking-widest uppercase">🔗 Abrir Anúncio</a>
                 </div>
               )}
             </div>

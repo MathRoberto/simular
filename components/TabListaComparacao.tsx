@@ -7,6 +7,7 @@ const formatarMoeda = (valor: number) => {
 
 export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, totalGastosFixos, onIniciarEdicao }: any) {
   const [detalhe, setDetalhe] = useState<any>(null);
+  const [selecionadosParaComparar, setSelecionadosParaComparar] = useState<any[]>([]);
 
   const calcularSobra = (imovel: any) => {
     const custo = Number(imovel.aluguel || 0) + Number(imovel.condominio || 0) + 
@@ -16,32 +17,63 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
     return { custo, sobra };
   };
 
+  const toggleComparacao = (e: React.MouseEvent, imovel: any) => {
+    e.stopPropagation(); // Não abre o Raio-X ao clicar na balança
+    if (selecionadosParaComparar.find(i => i.id === imovel.id)) {
+      setSelecionadosParaComparar(selecionadosParaComparar.filter(i => i.id !== imovel.id));
+    } else if (selecionadosParaComparar.length < 2) {
+      setSelecionadosParaComparar([...selecionadosParaComparar, imovel]);
+    }
+  };
+
   return (
     <div className="space-y-6 pb-28 animate-in fade-in duration-700">
       <div className="px-4 flex justify-between items-center">
         <h2 className="text-xl font-black text-white uppercase tracking-[0.2em] italic drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">Meus Favoritos</h2>
+        
+        {/* BOTÃO DE RESET DO DUELO */}
+        {selecionadosParaComparar.length > 0 && (
+          <button 
+            onClick={() => setSelecionadosParaComparar([])}
+            className="text-[9px] bg-purple-500/20 text-purple-400 px-4 py-2 rounded-full font-black border border-purple-500/30 uppercase animate-pulse"
+          >
+            ⚔️ Duelo ({selecionadosParaComparar.length}/2)
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
         {imoveisSalvos.map((imovel: any) => {
           const { custo, sobra } = calcularSobra(imovel);
+          const estaSelecionado = selecionadosParaComparar.find(i => i.id === imovel.id);
           
           return (
-            <div key={imovel.id} onClick={() => setDetalhe(imovel)} className="group bg-[#111114]/80 backdrop-blur-md border border-white/5 transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] hover:border-purple-500/30 overflow-hidden relative">
+            <div 
+              key={imovel.id} 
+              onClick={() => setDetalhe(imovel)} 
+              className={`group bg-[#111114]/80 backdrop-blur-md border transition-all duration-300 rounded-[2.5rem] p-7 cursor-pointer hover:scale-[1.01] ${estaSelecionado ? 'border-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.2)]' : 'border-white/5 hover:border-purple-500/30'} overflow-hidden relative`}
+            >
               
-              {/* Header do Card com Nome e Botões */}
               <div className="flex justify-between items-start mb-6 relative z-10">
-                <div className="max-w-[70%]">
+                <div className="max-w-[65%]">
                   <h3 className="text-2xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 truncate pr-8 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">{imovel.nome}</h3>
                   <p className="text-[10px] text-zinc-500 truncate italic">📍 {imovel.endereco}</p>
                 </div>
+                
+                {/* BOTÕES DE AÇÃO COM DUELO REATIVADO */}
                 <div className="flex gap-2 relative z-20" onClick={(e) => e.stopPropagation()}>
+                  <button 
+                    onClick={(e) => toggleComparacao(e, imovel)} 
+                    title="Comparar"
+                    className={`p-3 rounded-2xl transition-all ${estaSelecionado ? 'bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]' : 'bg-zinc-800/50 text-zinc-400 hover:text-purple-400'}`}
+                  >
+                    {estaSelecionado ? '✅' : '⚖️'}
+                  </button>
                   <button onClick={() => onIniciarEdicao(imovel)} title="Editar" className="p-3 bg-zinc-800/50 hover:bg-zinc-700 rounded-2xl text-xs text-zinc-400 hover:text-white transition-all">⚙️</button>
                   <button onClick={() => onExcluir(imovel.id)} title="Deletar" className="p-3 bg-rose-950/20 hover:bg-rose-600 text-rose-500 hover:text-white rounded-2xl text-xs transition-all border border-rose-500/10 text-center">✕</button>
                 </div>
               </div>
 
-              {/* FINANCEIRO - Único Foco do Card agora */}
               <div className="bg-black/60 rounded-[1.8rem] p-5 border border-purple-900/20 mb-2 relative z-10">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-[9px] uppercase font-black text-zinc-600 tracking-widest">Custo Total</span>
@@ -53,14 +85,13 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                 </div>
               </div>
 
-              {/* Subtitle para Raio-X */}
               <p className="text-center text-[7px] text-zinc-800 font-black uppercase tracking-widest mt-3 group-hover:text-zinc-600 transition-colors relative z-10">Raio-X 🔍</p>
             </div>
           );
         })}
       </div>
 
-      {/* MODAL RAIO-X (Mantive completo para consulta se o usuário clicar) */}
+      {/* MODAL RAIO-X */}
       {detalhe && (
         <div className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setDetalhe(null)}>
           <div className="bg-[#0a0a0c] border border-purple-500/20 p-8 rounded-[3rem] max-w-sm w-full shadow-2xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
@@ -103,6 +134,34 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
             </div>
             
             <button onClick={() => setDetalhe(null)} className="w-full mt-6 bg-zinc-900 p-4 rounded-2xl font-black text-zinc-500 uppercase tracking-widest border border-white/5 hover:bg-zinc-800 transition-colors">Fechar</button>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DUELO - COMPLETO */}
+      {selecionadosParaComparar.length === 2 && (
+        <div className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-3xl flex items-center justify-center p-6" onClick={() => setSelecionadosParaComparar([])}>
+          <div className="max-w-4xl w-full bg-[#0a0a0c]/90 border border-purple-900/30 rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in-95" onClick={e => e.stopPropagation()}>
+            <div className="p-6 border-b border-purple-900/20 flex justify-between items-center bg-gradient-to-r from-purple-900/20 to-fuchsia-900/20">
+              <h2 className="text-xl font-black text-white italic uppercase tracking-widest">Confronto Direto</h2>
+              <button onClick={() => setSelecionadosParaComparar([])} className="bg-zinc-900 p-3 rounded-full text-zinc-500 hover:text-white">✕</button>
+            </div>
+            <div className="grid grid-cols-2 divide-x divide-purple-900/20">
+              {selecionadosParaComparar.map((imovel, idx) => {
+                const { sobra } = calcularSobra(imovel);
+                const outroSobra = calcularSobra(selecionadosParaComparar[idx === 0 ? 1 : 0]).sobra;
+                return (
+                  <div key={imovel.id} className="p-10 text-center space-y-6">
+                    <h3 className={`text-2xl font-black uppercase italic ${idx === 0 ? 'text-purple-400' : 'text-fuchsia-400'}`}>{imovel.nome}</h3>
+                    <div className="bg-black/50 p-6 rounded-[2rem] border border-white/5">
+                       <span className="text-[8px] font-black text-zinc-500 uppercase block mb-2">Sobra Mensal</span>
+                       <span className={`text-3xl font-black ${sobra > outroSobra ? 'text-emerald-400' : 'text-zinc-500'}`}>{formatarMoeda(sobra)}</span>
+                    </div>
+                    {sobra > outroSobra && <span className="text-[9px] font-black text-emerald-500 uppercase italic tracking-widest block animate-bounce">🏆 Vantagem Financeira</span>}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

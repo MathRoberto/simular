@@ -89,7 +89,6 @@ export default function TabMapa({ imoveisSalvos }: any) {
                   <div className="bg-black/60 p-6 rounded-[2.2rem] border border-purple-900/20 shadow-inner">
                     <span className="text-[9px] font-black text-zinc-500 uppercase block mb-3 italic tracking-wider">Casa do Pai</span>
                     <div className="flex flex-col gap-2">
-                      {/* CORREÇÃO AQUI: Carro usa paiCarro, Pedestre usa paiApe */}
                       <span className="text-xl font-black text-white tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">🚗 {dados.paiCarro}m</span>
                       <span className="text-xl font-black text-fuchsia-400 tracking-tight drop-shadow-[0_0_10px_rgba(217,70,239,0.4)]">🏃 {dados.paiApe}m</span>
                     </div>

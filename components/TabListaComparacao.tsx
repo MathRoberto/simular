@@ -55,7 +55,7 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                 <div className="flex gap-2 relative z-20" onClick={(e) => e.stopPropagation()}>
                   <button onClick={(e) => toggleComparacao(e, imovel)} className={`p-3 rounded-2xl transition-all ${estaSelecionado ? 'bg-purple-600 text-white' : 'bg-zinc-800/50 text-zinc-400 hover:text-purple-400'}`}>{estaSelecionado ? '✅' : '⚖️'}</button>
                   <button onClick={() => onIniciarEdicao(imovel)} className="p-3 bg-zinc-800/50 hover:bg-zinc-700 rounded-2xl text-xs text-zinc-400">⚙️</button>
-                  <button onClick={() => onExcluir(imovel.id)} className="p-3 bg-rose-950/20 hover:bg-rose-600 text-rose-500 rounded-2xl text-xs transition-all border border-rose-500/10">✕</button>
+                  <button onClick={() => onExcluir(imovel.id)} className="p-3 bg-rose-950/20 hover:bg-rose-600 text-rose-500 rounded-2xl text-xs border border-rose-500/10">✕</button>
                 </div>
               </div>
 
@@ -64,12 +64,26 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                 <div className="flex flex-col items-end"><span className="text-[9px] uppercase font-black text-zinc-600 tracking-widest mb-1">Sobra Final</span><span className={`text-2xl font-black tracking-tighter ${sobra >= 0 ? 'text-emerald-400' : 'text-rose-500'}`}>{formatarMoeda(sobra)}</span></div>
               </div>
 
-              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${estaAberto ? 'max-h-[600px] opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
+              <div className={`overflow-hidden transition-all duration-500 ease-in-out ${estaAberto ? 'max-h-[800px] opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
                 <div className="space-y-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-white/5 p-6 rounded-[2rem] border border-white/5">
-                    {/* Lista de custos resumida no card... */}
                     {['aluguel', 'condominio', 'iptu', 'luz', 'agua', 'gas'].map(key => (
                         <div key={key} className="flex justify-between"><span>{key}</span><span className="text-white">{formatarMoeda(imovel[key])}</span></div>
                     ))}
+
+                    {/* BOTÃO DO LINK RESTAURADO AQUI */}
+                    {imovel.link_anuncio && (
+                      <div className="mt-4 pt-4 border-t border-white/10">
+                        <a 
+                          href={imovel.link_anuncio} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="w-full block bg-purple-600/20 text-purple-400 text-center py-3 rounded-2xl transition-all border border-purple-500/20 font-black italic text-[8px] uppercase tracking-widest hover:bg-purple-600 hover:text-white"
+                        >
+                          🔗 Abrir Anúncio Original
+                        </a>
+                      </div>
+                    )}
                 </div>
               </div>
               <p className="text-center text-[7px] font-black uppercase text-zinc-800 mt-4 tracking-widest">{estaAberto ? 'Recolher 🔼' : 'Raio-X 🔍'}</p>
@@ -135,7 +149,6 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                         );
                     })}
                     
-                    {/* LINHA DE TOTAIS */}
                     <tr className="text-sm">
                         <td className="p-5 text-white font-black italic">CUSTO TOTAL</td>
                         <td className={`p-5 text-center font-black ${res1.custo < res2.custo ? 'text-emerald-400' : 'text-zinc-400'}`}>
@@ -148,7 +161,6 @@ export default function TabListaComparacao({ imoveisSalvos, onExcluir, salario, 
                   </tbody>
                 </table>
 
-                {/* VEREDITO FINAL */}
                 <div className="mt-10 p-8 bg-purple-900/10 border border-purple-500/20 rounded-[2.5rem] text-center">
                     <p className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-2 italic">Análise do Cockpit</p>
                     <h4 className="text-lg font-black text-white uppercase italic tracking-tighter">

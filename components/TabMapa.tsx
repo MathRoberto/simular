@@ -7,35 +7,32 @@ export default function TabMapa({ imoveisSalvos }: any) {
   const [temposLocal, setTemposLocal] = useState<{ [key: string]: any }>({});
   const [erros, setErros] = useState<{ [key: string]: boolean }>({});
 
-  // Lógica para calcular tempos de TODOS os imóveis
   const handleCalcularTudo = async () => {
     if (imoveisSalvos.length === 0) return;
     setCalculandoTudo(true);
-    setErros({}); // Reseta erros anteriores
+    setErros({});
 
     const novosTempos: { [key: string]: any } = {};
     const novosErros: { [key: string]: boolean } = {};
 
-    // Mapeia promessas para rodar em paralelo
     const promises = imoveisSalvos.map(async (imovel: any) => {
       try {
         const res = await calcularTemposJF(imovel.endereco);
         if (res) {
           novosTempos[imovel.id] = {
-            pai: res.tempoPaiCarro, 
-            trampo: res.tempoTrabCarro,
+            paiCarro: res.tempoPaiCarro, 
+            trampoCarro: res.tempoTrabCarro,
             paiApe: res.tempoPaiApe,
             trampoApe: res.tempoTrabApe
           };
         } else {
-            novosErros[imovel.id] = true; // Endereço inválido
+            novosErros[imovel.id] = true;
         }
       } catch (error) {
-        novosErros[imovel.id] = true; // Erro de rede/API
+        novosErros[imovel.id] = true;
       }
     });
 
-    // Aguarda todos os cálculos terminarem
     await Promise.all(promises);
 
     setTemposLocal(novosTempos);
@@ -46,7 +43,6 @@ export default function TabMapa({ imoveisSalvos }: any) {
   return (
     <div className="space-y-8 animate-in fade-in duration-700 pb-20">
       
-      {/* HEADER E BOTÃO "CALCULAR TUDO" */}
       <div className="px-4 flex justify-between items-center bg-black/30 p-6 rounded-[2rem] border border-white/5 shadow-2xl">
         <div>
           <h2 className="text-xl font-black text-white uppercase tracking-[0.2em] italic drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]">Análise de Percurso (JF)</h2>
@@ -64,7 +60,6 @@ export default function TabMapa({ imoveisSalvos }: any) {
         )}
       </div>
 
-      {/* GRID DE CARDS LOGÍSTICOS (SEM BOTÃO INDIVIDUAL) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
         {imoveisSalvos.map((imovel: any) => {
           const dados = temposLocal[imovel.id];
@@ -72,7 +67,6 @@ export default function TabMapa({ imoveisSalvos }: any) {
           
           return (
             <div key={imovel.id} className="bg-white/[0.03] backdrop-blur-md border border-white/5 p-8 rounded-[3rem] hover:border-purple-500/30 transition-all group relative overflow-hidden">
-               {/* Fundo Glow interno sutil */}
               <div className="absolute inset-0 bg-purple-900/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"/>
 
               <div className="flex justify-between items-start mb-6 relative z-10">
@@ -87,14 +81,16 @@ export default function TabMapa({ imoveisSalvos }: any) {
                   <div className="bg-black/60 p-6 rounded-[2.2rem] border border-purple-900/20 shadow-inner">
                     <span className="text-[9px] font-black text-zinc-500 uppercase block mb-3 italic tracking-wider">Oscar Vidal (Trampo)</span>
                     <div className="flex flex-col gap-2">
-                      <span className="text-xl font-black text-white tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">🚗 {dados.trampo}m</span>
+                      {/* CORREÇÃO AQUI: Carro usa trampoCarro, Pedestre usa trampoApe */}
+                      <span className="text-xl font-black text-white tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">🚗 {dados.trampoCarro}m</span>
                       <span className="text-xl font-black text-purple-400 tracking-tight drop-shadow-[0_0_10px_rgba(168,85,247,0.4)]">🏃 {dados.trampoApe}m</span>
                     </div>
                   </div>
                   <div className="bg-black/60 p-6 rounded-[2.2rem] border border-purple-900/20 shadow-inner">
                     <span className="text-[9px] font-black text-zinc-500 uppercase block mb-3 italic tracking-wider">Casa do Pai</span>
                     <div className="flex flex-col gap-2">
-                      <span className="text-xl font-black text-white tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">🚗 {dados.pai}m</span>
+                      {/* CORREÇÃO AQUI: Carro usa paiCarro, Pedestre usa paiApe */}
+                      <span className="text-xl font-black text-white tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">🚗 {dados.paiCarro}m</span>
                       <span className="text-xl font-black text-fuchsia-400 tracking-tight drop-shadow-[0_0_10px_rgba(217,70,239,0.4)]">🏃 {dados.paiApe}m</span>
                     </div>
                   </div>
@@ -105,8 +101,8 @@ export default function TabMapa({ imoveisSalvos }: any) {
                     <span className="text-[8px] font-black text-rose-400 uppercase tracking-widest italic">Endereço Não Encontrado</span>
                   </div>
               ) : (
-                <div className="h-28 flex items-center justify-center border-2 border-dashed border-purple-900/10 rounded-[2.5rem] bg-black/20">
-                   <span className="text-[9px] font-black text-zinc-700 uppercase tracking-widest italic animate-pulse">Aguardando Comando de JF</span>
+                <div className="h-28 flex items-center justify-center border-2 border-dashed border-purple-900/10 rounded-[2.5rem] bg-black/20 text-[9px] font-black text-zinc-700 uppercase tracking-widest italic animate-pulse">
+                   Aguardando Comando de JF
                 </div>
               )}
             </div>

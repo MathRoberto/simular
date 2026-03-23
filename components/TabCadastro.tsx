@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-export default function TabCadastro({ onSalvar, imovelParaEditar, onLimparEdicao }: any) {
+export default function TabCadastro({ onSalvar, imovelParaEditar, onLimparEdicao, onCancelar }: any) {
   const [nome, setNome] = useState('');
   const [endereco, setEndereco] = useState('');
   const [linkAnuncio, setLinkAnuncio] = useState('');
@@ -56,7 +56,6 @@ export default function TabCadastro({ onSalvar, imovelParaEditar, onLimparEdicao
         <h2 className="text-2xl font-black text-white uppercase italic tracking-tighter">
           {imovelParaEditar ? '🚀 Editando Imóvel' : '➕ Novo Imóvel em JF'}
         </h2>
-        {imovelParaEditar && <button onClick={limpar} className="text-[10px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/10 px-4 py-2 rounded-full border border-rose-500/20">Cancelar Edição</button>}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8 px-2">
@@ -74,7 +73,14 @@ export default function TabCadastro({ onSalvar, imovelParaEditar, onLimparEdicao
         <div className="bg-[#0a0a0c] border border-white/5 p-8 rounded-[3rem] shadow-2xl space-y-4">
           <p className="text-[10px] font-black text-purple-500 uppercase tracking-[0.3em] mb-4">Custos Mensais (R$)</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[['Aluguel', aluguel, setAluguel], ['Condomínio', condominio, setCondominio], ['IPTU', iptu, setIptu], ['Luz (Cemig)', luz, setLuz], ['Água (Cesama)', agua, setAgua], ['Gás', gas, setGas]].map(([label, val, set]: any, i) => (
+            {[
+              ['Aluguel', aluguel, setAluguel],
+              ['Condomínio', condominio, setCondominio],
+              ['IPTU', iptu, setIptu],
+              ['Luz (Cemig)', luz, setLuz],
+              ['Água (Cesama)', agua, setAgua],
+              ['Gás', gas, setGas]
+            ].map(([label, val, set]: any, i) => (
               <div key={i}>
                 <label className="text-[8px] font-black text-zinc-700 uppercase mb-2 block">{label}</label>
                 <input type="number" value={val} onChange={e => set(e.target.value)} placeholder="0.00" className="w-full bg-black/50 p-4 rounded-2xl border border-white/5 text-white outline-none focus:border-purple-500" />
@@ -83,9 +89,23 @@ export default function TabCadastro({ onSalvar, imovelParaEditar, onLimparEdicao
           </div>
         </div>
 
-        <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 p-6 rounded-[2rem] font-black text-white uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] transition-all">
-          {imovelParaEditar ? 'Atualizar Dados' : 'Salvar no Radar'}
-        </button>
+        {/* BOTÕES DE AÇÃO */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <button 
+            type="button" 
+            onClick={onCancelar}
+            className="flex-1 bg-zinc-900/50 hover:bg-zinc-800 p-6 rounded-[2rem] font-black text-zinc-500 hover:text-white uppercase tracking-[0.2em] transition-all border border-white/5"
+          >
+            {imovelParaEditar ? 'Desistir da Edição' : 'Cancelar'}
+          </button>
+          
+          <button 
+            type="submit" 
+            className="flex-[2] bg-gradient-to-r from-purple-600 to-fuchsia-600 p-6 rounded-[2rem] font-black text-white uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] transition-all"
+          >
+            {imovelParaEditar ? 'Sincronizar Alterações' : 'Salvar'}
+          </button>
+        </div>
       </form>
     </div>
   );

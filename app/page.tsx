@@ -56,14 +56,12 @@ export default function SimularDashboard() {
       .order('created_at', { ascending: false });
     if (imov) setImoveisSalvos(imov as ImovelSalvo[]);
 
-    // CONFIGURAÇÕES (SALÁRIO) - CORREÇÃO AQUI
-    // Removido .single() para evitar erro 406/404 em novos usuários
-    const { data: cfg, error } = await supabase
+    // CONFIGURAÇÕES (SALÁRIO)
+    const { data: cfg } = await supabase
       .from('configuracoes')
       .select('salario')
       .eq('user_id', user.id);
     
-    // Se encontrou o registro, atualiza. Se não, reseta para 0 sem dar erro.
     if (cfg && cfg.length > 0) {
       setSalario(Number(cfg[0].salario || 0));
     } else {
@@ -194,6 +192,10 @@ export default function SimularDashboard() {
             onSalvar={handleSalvarImovel}
             imovelParaEditar={imovelSendoEditado}
             onLimparEdicao={() => setImovelSendoEditado(null)}
+            onCancelar={() => {
+              setImovelSendoEditado(null);
+              setAbaAtiva('lista');
+            }}
           />
         )}
         {abaAtiva === 'mapa' && (
@@ -204,26 +206,44 @@ export default function SimularDashboard() {
         )}
       </main>
 
-      {/* DOCK DE NAVEGAÇÃO */}
+      {/* DOCK DE NAVEGAÇÃO PADRONIZADO */}
       <div className="fixed bottom-8 left-0 right-0 flex justify-center z-[100] px-6 pointer-events-none">
         <nav className="flex items-center justify-around w-full max-w-lg bg-[#0f0f12]/80 backdrop-blur-2xl border border-white/10 rounded-full p-2 shadow-2xl pointer-events-auto">
-          <button onClick={() => setAbaAtiva('lista')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'lista' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}>
+          
+          <button 
+            onClick={() => setAbaAtiva('lista')} 
+            className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'lista' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}
+          >
             <span className="text-xl mb-1">📋</span>
-            <span className="text-[7px] font-black uppercase tracking-widest italic">Radar</span>
+            <span className="text-[7px] font-black uppercase tracking-widest italic">Imóveis</span>
           </button>
-          <div className="px-2">
-            <button onClick={() => { setImovelSendoEditado(null); setAbaAtiva('cadastro'); }} className={`p-5 rounded-full -mt-12 border-4 border-[#08080a] shadow-2xl transition-all duration-500 ${abaAtiva === 'cadastro' ? 'bg-purple-600 text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] scale-110' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}>
-              <span className="text-2xl block font-bold">＋</span>
-            </button>
-          </div>
-          <button onClick={() => setAbaAtiva('mapa')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'mapa' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}>
-            <span className="text-xl mb-1">🗺️</span>
-            <span className="text-[7px] font-black uppercase tracking-widest italic">Rotas</span>
+
+          <button 
+            onClick={() => { setImovelSendoEditado(null); setAbaAtiva('cadastro'); }} 
+            className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'cadastro' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}
+          >
+            <span className="text-xl mb-1">📝</span>
+            <span className="text-[7px] font-black uppercase tracking-widest italic">Cadastro</span>
           </button>
-          <button onClick={() => setAbaAtiva('destinos')} className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'destinos' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}>
+
+          <button 
+            onClick={() => setAbaAtiva('destinos')} 
+            className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'destinos' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}
+          >
             <span className="text-xl mb-1">📍</span>
             <span className="text-[7px] font-black uppercase tracking-widest italic">Destinos</span>
           </button>
+          
+          <button 
+            onClick={() => setAbaAtiva('mapa')} 
+            className={`flex-1 flex flex-col items-center py-3 rounded-full transition-all ${abaAtiva === 'mapa' ? 'text-purple-400 bg-white/5 shadow-inner' : 'text-zinc-600 hover:text-zinc-300'}`}
+          >
+            <span className="text-xl mb-1">🗺️</span>
+            <span className="text-[7px] font-black uppercase tracking-widest italic">Rotas</span>
+          </button>
+
+          
+
         </nav>
       </div>
 
@@ -234,7 +254,7 @@ export default function SimularDashboard() {
           mostrarSalario={mostrarSalario}
           onClose={async () => { 
             setModalAberto(null); 
-            await carregarDadosIniciais(); // Garante que a sobra/salário atualize na hora
+            await carregarDadosIniciais(); 
           }}
         />
       )}
